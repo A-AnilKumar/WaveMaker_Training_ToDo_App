@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ToDo App</title>
+    <link rel="stylesheet" href="styles/style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"
+      integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N"
+      crossorigin="anonymous"
+    />
+  </head>
+  <body>
+    <div class="container">
+      <header class="d-flex mb-4">
+        <img
+          class="todo-image mx-2 rounded float-start"
+          src="assets/images/todo-image.png"
+          alt="todo-image"
+        />
+        <h1>ToDo App</h1>
+      </header>
+      <div class="row mb-4">
+        <input
+          class="col-md-8 h-100 mx-1"
+          type="text"
+          id="searchBar"
+          placeholder="Search by ToDo"
+        />
+        <select class="col-md-2 mx-1 rounded-pill" id="sortBy">
+          <option value="Priority">Priority</option>
+          <option value="End Date">End Date</option>
+          <option value="End Time">End Time</option>
+        </select>
+        <button class="col-md-1 h-100 mx-1" id="darkModeToggle">🌙</button>
+      </div>
+
+      <div class="row mb-4">
+        <input
+          class="col-md-4 mx-1 h-100 rounded-pill"
+          type="text"
+          id="todoInput"
+          placeholder="Add a new ToDo"
+        />
+        <select class="col-md-2 mx-1" id="prioritySelect">
+          <option value="Low">Low Priority</option>
+          <option value="Medium">Medium Priority</option>
+          <option value="High">High Priority</option>
+        </select>
+        <input class="col-md-2 mx-1 rounded-pill" type="date" id="endDate" />
+        <input class="col-md-2 mx-1 rounded-pill" type="time" id="endTime" />
+        <br />
+        <button class="col-md-1 mx-1 rounded-pill" id="addTodoButton">
+          Add ToDo
+        </button>
+      </div>
+
+      <button id="exportBtn" class="btn btn-primary">Export</button>
+      <input type="file" id="importFile" />
+      <br />
+      <br />
+
+      <ul id="todoList" class="todo-list"></ul>
+    </div>
+    <script src="scripts/script.js"></script>
+  </body>
+</html>

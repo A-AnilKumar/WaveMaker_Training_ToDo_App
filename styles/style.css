@@ -1,0 +1,122 @@
+:root {
+    --background-color-light: #f5f5f5;
+    --background-color-dark: #333;
+    --text-color-light: #000;
+    --text-color-dark: #fff;
+    --button-background-light: #007bff;
+    --button-background-dark: #444;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: var(--background-color-light);
+    color: var(--text-color-light);
+}
+
+header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0.1rem;
+}
+
+h1{
+    text-align: center;
+    color:red;
+    margin: 0;
+}
+
+.todo-image{
+    width: 50px;
+    height: 50px;
+}
+
+
+button {
+    background-color: var(--button-background-light);
+    color: #fff;
+    border: none;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+button:hover {
+    opacity: 0.8;
+}
+
+button:active {
+    opacity: 0.6;
+}
+
+#darkModeToggle {
+    background-color: var(--button-background-dark);
+    width: 68px;
+    border-radius: 24px;
+
+}
+
+.container {
+    padding: 1rem;
+}
+
+.todo-container {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 0rem;
+}
+
+#todoInput, #searchBar {
+    flex: 16;
+    padding: 0.5rem;
+    border: 3px solid #ddd;
+    border-radius: 22px;
+    height: 27px;
+}
+
+#todoInput{
+    width:10px;
+}
+
+#prioritySelect {
+    padding: 0.5rem;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+}
+
+#endTime{
+    border-radius: 10px;
+}
+
+.todo-list {
+    list-style: none;
+    padding: 0;
+}
+
+.todo-item {
+    display: flex;
+    align-items: center;
+    padding: 0.5rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin-bottom: 0.5rem;
+    background-color: #fff;
+    cursor: pointer;
+}
+
+.dark-mode {
+    background-color: var(--background-color-dark);
+    color: var(--text-color-dark);
+}
+
+.dark-mode button {
+    background-color: var(--button-background-dark);
+}
+
+.dark-mode .todo-item {
+    background-color: #444;
+    color: var(--text-color-dark);
+    border: 1px solid #555;
+}
