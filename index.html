@@ -28,11 +28,12 @@
           type="text"
           id="searchBar"
           placeholder="Search by ToDo"
-        />
+          required
+          />
         <select class="col-md-2 mx-1 rounded-pill" id="sortBy">
-          <option value="Priority">Priority</option>
-          <option value="End Date">End Date</option>
-          <option value="End Time">End Time</option>
+          <option value="" disabled selected>Sort By</option>
+          <option value="Priority">Priority ( High )</option>
+          <option value="End Date">End Date & Time</option>
         </select>
         <button class="col-md-1 h-100 mx-1" id="darkModeToggle">🌙</button>
       </div>
@@ -45,12 +46,13 @@
           placeholder="Add a new ToDo"
         />
         <select class="col-md-2 mx-1" id="prioritySelect">
+          <option value="" disabled selected>Select Priority</option>
           <option value="Low">Low Priority</option>
           <option value="Medium">Medium Priority</option>
           <option value="High">High Priority</option>
         </select>
-        <input class="col-md-2 mx-1 rounded-pill" type="date" id="endDate" />
-        <input class="col-md-2 mx-1 rounded-pill" type="time" id="endTime" />
+        <input class="col-md-2 mx-1 rounded-pill" type="date" id="endDate" required/>
+        <input class="col-md-2 mx-1 rounded-pill" type="time" id="endTime" required/>
         <br />
         <button class="col-md-1 mx-1 rounded-pill" id="addTodoButton">
           Add ToDo
@@ -62,7 +64,20 @@
       <br />
       <br />
 
-      <ul id="todoList" class="todo-list"></ul>
+      <h2>My ToDo's</h2>
+      <div >
+          <!-- <div class="scrollable-div"> -->
+        <ul id="todoList" class="todo-list"></ul>
+      </div>
+      <br />
+
+
+      <h2>Completed ToDo's</h2>
+      <div>
+      <!-- <div id="completedTodos" class="scrollable-div"> -->
+        <ul id="completedTodos"></ul>
+      </div>
+
     </div>
     <script src="scripts/script.js"></script>
   </body>

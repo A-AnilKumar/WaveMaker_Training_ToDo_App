@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     const today = new Date();
     const dateString = today.toISOString().split('T')[0];
     const timeString = today.toTimeString().split(' ')[0].substring(0, 5);
@@ -21,10 +21,31 @@ function addTodo() {
     const endTime = document.getElementById('endTime').value;
     const endDate = document.getElementById('endDate').value;
 
-    if (todoName === '') return;
+    console.log(typeof todoName);
+
+
+    if (!todoName.trim()) {
+        alert("ToDo name cannot be empty");
+        return;
+    }
+
+    if (endTime === '') {
+        alert("ToDo end time cannot be empty");
+        return;
+    }
+
+    if (endDate === '') {
+        alert("ToDo end date cannot be empty");
+        return;
+    }
+
+    if (endTime < new Date().toTimeString().split(' ')[0].substring(0, 5)) {
+        alert("Time should be future not past ")
+        return;
+    }
 
     const todo = {
-        text: todoName,
+        text: todoName.trim(),
         priority: priority,
         endDate: endDate,
         endTime: endTime
@@ -33,6 +54,9 @@ function addTodo() {
     createTodoElement(todo);
     updateLocalStorage();
     document.getElementById('todoInput').value = '';
+    document.getElementById('prioritySelect').value = '';
+    document.getElementById('endTime').value = '';
+    document.getElementById('endDate').value = '';
 }
 
 function createTodoElement(todo) {
@@ -46,10 +70,11 @@ function createTodoElement(todo) {
         <span class="todo-priority col-md-1 mx-4">${todo.priority}</span>
         <span class="todo-end-date col-md-2 mx-4">${todo.endDate}</span>
         <span class="todo-end-time wk.col-md-1 mx-4">${todo.endTime}</span>
-    <!--  <button class="edit-btn col-md-1 mx-1 rounded-pill">✏️</button>
-        <button class="delete-btn col-md-1 mx-1 rounded-pill">❌</button>           -->
-        <button class="edit-btn btn btn-secondary col-md-1 mx-4">Edit</button>
-        <button class="delete-btn btn btn-danger col-md-1">Delete</button>
+        <!-- <span> <button class="edit-btn btn-primary col-md-1 mx-1 ">✏️</button> </span> -->
+        <button class="edit-btn btn-primary col-md-1 mx-1 rounded-pill">✏️</button>
+        <button class="delete-btn btn-light  col-md-1 mx-1 rounded-pill">❌</button>           
+        <button class="task-completed-btn btn btn-success col-md-1 rounded-pill">✅</button>
+        
     `;
     todoList.appendChild(item);
 }
@@ -59,33 +84,80 @@ function handleTodoActions(event) {
         showEditDialog(event.target.parentElement);
     } else if (event.target.classList.contains('delete-btn')) {
         deleteTodoItem(event.target.parentElement);
+    } else if (event.target.classList.contains('task-completed-btn')) {
+        completeTodoItem(event.target.parentElement);
     }
 }
 
 function showEditDialog(todoItem) {
+    // overlay to darken the background
+    const overlay = document.createElement('div');
+    overlay.className = 'dialog-overlay';
+    document.body.appendChild(overlay);
+    // Create the dialog box
     const dialog = document.createElement('div');
     dialog.className = 'edit-dialog';
     dialog.innerHTML = `
-        <dialog open>
-            <input type="text" id="editTodoInput" value="${todoItem.querySelector('.todo-text').textContent}">
-            <select id="editPrioritySelect">
-                <option value="Low" ${todoItem.querySelector('.todo-priority').textContent === 'Low' ? 'selected' : ''}>Low</option>
-                <option value="Medium" ${todoItem.querySelector('.todo-priority').textContent === 'Medium' ? 'selected' : ''}>Medium</option>
-                <option value="High" ${todoItem.querySelector('.todo-priority').textContent === 'High' ? 'selected' : ''}>High</option>
-            </select>
-            <input type="time" id="editEndTime" value="${todoItem.querySelector('.todo-end-time').textContent}">
-            <input type="date" id="editEndDate" value="${todoItem.querySelector('.todo-end-date').textContent}">
-            <button id="saveEditBtn" class="btn btn-success">Save</button>
-            <button id="cancelEditBtn" class="btn btn-danger">Cancel</button>
-        </dialog>
-    `;
+    <div class="dialog-content">
+    <h2> Edit ToDo</h2>
+        <input type="text" id="editTodoInput" value="${todoItem.querySelector('.todo-text').textContent}"> 
+        <br><br>
+        <select id="editPrioritySelect">
+            <option value="Low" ${todoItem.querySelector('.todo-priority').textContent === 'Low' ? 'selected' : ''}>Low</option>
+            <option value="Medium" ${todoItem.querySelector('.todo-priority').textContent === 'Medium' ? 'selected' : ''}>Medium</option>
+            <option value="High" ${todoItem.querySelector('.todo-priority').textContent === 'High' ? 'selected' : ''}>High</option>
+        </select>  
+        <br> <br>
+        <input type="time" id="editEndTime" value="${todoItem.querySelector('.todo-end-time').textContent}">
+        <br><br>
+        <input type="date" id="editEndDate" value="${todoItem.querySelector('.todo-end-date').textContent}">
+        <br><br>
+        <button id="saveEditBtn" class="btn btn-success">Save</button>
+        <button id="cancelEditBtn" class="btn btn-danger">Cancel</button>
+    </div>
+`;
     document.body.appendChild(dialog);
 
+    // Get current date and time
+    const today = new Date();
+    const dateString = today.toISOString().split('T')[0];
+    const timeString = today.toTimeString().split(' ')[0].substring(0, 5);
+
+    // minimum values to prevent selecting past date or time
+    const editEndDate = document.getElementById('editEndDate');
+    const editEndTime = document.getElementById('editEndTime');
+
+    editEndDate.setAttribute('min', dateString);
+    editEndTime.setAttribute('min', timeString);
+
+    // Handle Save and Cancel actions
     document.getElementById('saveEditBtn').addEventListener('click', () => {
+        // Get the selected date and time
+        const selectedDate = editEndDate.value;
+        const selectedTime = editEndTime.value;
+    
+        // Get the current date and time for comparison
+        const now = new Date();
+        const currentDate = now.toISOString().split('T')[0];
+        const currentTime = now.toTimeString().split(' ')[0].substring(0, 5);
+    
+        if (!selectedDate) {
+            alert("Date cannot be empty");
+            return;
+        }
+    
+        if (selectedDate < currentDate || (selectedDate === currentDate && selectedTime < currentTime)) {
+            alert('You cannot select a past date or time. Please choose a valid future date and time.');
+            return; 
+        }
+    
         saveTodoEdit(todoItem);
+        overlay.remove();
         dialog.remove();
     });
+
     document.getElementById('cancelEditBtn').addEventListener('click', () => {
+        overlay.remove();
         dialog.remove();
     });
 }
@@ -109,22 +181,38 @@ function deleteTodoItem(todoItem) {
     updateLocalStorage();
 }
 
+function completeTodoItem(todoItem) {
+    // todoItem.querySelector('.todo-text').style.textDecoration = 'line-through';
+
+    // Move the item to the completed todos list
+    const completedTodosList = document.getElementById('completedTodos').querySelector('ul');
+    completedTodosList.appendChild(todoItem);
+
+    // to disable the buttons 
+    todoItem.querySelector('.edit-btn').disabled = true;
+    todoItem.querySelector('.task-completed-btn').disabled = true;
+    todoItem.querySelector('.delete-btn').classList.remove('btn-danger');
+    todoItem.querySelector('.delete-btn').classList.add('btn-secondary');
+
+    updateLocalStorage();
+}
+
 searchBar.addEventListener('input', () => {
-        const searchTerm = searchBar.value.toLowerCase();
-        const todos = todoList.querySelectorAll('.todo-item');
-        todos.forEach(todo => {
-            const text = todo.querySelector('span').textContent.toLowerCase();
-            todo.style.display = text.includes(searchTerm) ? 'flex' : 'none';
-        });
+    const searchTerm = searchBar.value.toLowerCase();
+    const todos = todoList.querySelectorAll('.todo-item');
+    todos.forEach(todo => {
+        const text = todo.querySelector('span').textContent.toLowerCase();
+        todo.style.display = text.includes(searchTerm) ? 'flex' : 'none';
     });
+});
 
 const darkModeToggle = document.getElementById('darkModeToggle');
-let darkMode  = false;
-    darkModeToggle.addEventListener('click', () => {
-        darkMode = !darkMode;
-        document.body.classList.toggle('dark-mode', darkMode);
-        darkModeToggle.textContent = darkMode ? '🌞' : '🌙';
-    });
+let darkMode = false;
+darkModeToggle.addEventListener('click', () => {
+    darkMode = !darkMode;
+    document.body.classList.toggle('dark-mode', darkMode);
+    darkModeToggle.textContent = darkMode ? '🌞' : '🌙';
+});
 
 function updateLocalStorage() {
     const todos = Array.from(document.querySelectorAll('.todo-item')).map(item => ({
@@ -146,24 +234,21 @@ function sortTodos() {
     const todoList = document.getElementById('todoList');
     const items = Array.from(todoList.getElementsByClassName('todo-item'));
     items.sort((a, b) => {
-        let  firstValue,  secondValue;
-        if(criteria == 'End Date'){
-            firstValue = new Date(a.querySelector('.todo-end-date').textContent);
-            secondValue = new Date(b.querySelector('.todo-end-date').textContent)
-        }
-        else if(criteria == 'End Time'){
-            firstValue = parseTime(a.querySelector('.todo-end-time').textContent);
-            secondValue = parseTime(b.querySelector('.todo-end-time').textContent);
-        }
-        else{
-            // need to implement more 
+        let firstValue, secondValue;
+        if (criteria == 'End Date' || criteria === 'End Time') {
+            // Combine date and time for comparison
+            firstValue = new Date(`${a.querySelector('.todo-end-date').textContent}T${a.querySelector('.todo-end-time').textContent}`);
+            secondValue = new Date(`${b.querySelector('.todo-end-date').textContent}T${b.querySelector('.todo-end-time').textContent}`);
+        } else {
+            // sort by priority
             const priorities = { 'High': 1, 'Medium': 2, 'Low': 3 };
             firstValue = priorities[a.querySelector('.todo-priority').textContent];
             secondValue = priorities[b.querySelector('.todo-priority').textContent];
         }
-        return  firstValue -  secondValue;
+        return firstValue - secondValue;
     });
     items.forEach(item => todoList.appendChild(item));
+    document.getElementById('sortBy').value = '';
 }
 
 function parseTime(timeString) {
@@ -192,7 +277,7 @@ function exportTodos() {
 function importTodos(event) {
     const file = event.target.files[0];
     const reader = new FileReader();
-    reader.onload = function(e) {
+    reader.onload = function (e) {
         const todos = JSON.parse(e.target.result);
         localStorage.setItem('todos', JSON.stringify(todos));
         loadTodos();

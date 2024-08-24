@@ -10,7 +10,7 @@ https://a-anilkumar.github.io/WaveMaker_Training_ToDo_App/
     # Edit Todo
     # Delete Todo
     # Search ToDo
-    # Sort ToDo by Priority, End Time, End Date
+    # Sort ToDo by Priority (High), End Time and Date
     # Dark theme
     # Export as JSON
     # Import from JSON
