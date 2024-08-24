@@ -191,8 +191,9 @@ function completeTodoItem(todoItem) {
     // to disable the buttons 
     todoItem.querySelector('.edit-btn').disabled = true;
     todoItem.querySelector('.task-completed-btn').disabled = true;
-    todoItem.querySelector('.delete-btn').classList.remove('btn-danger');
-    todoItem.querySelector('.delete-btn').classList.add('btn-secondary');
+    todoItem.querySelector('.delete-btn').disabled =true;
+    // todoItem.querySelector('.delete-btn').classList.remove('btn-danger');
+    // todoItem.querySelector('.delete-btn').classList.add('btn-secondary');
 
     updateLocalStorage();
 }
