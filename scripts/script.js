@@ -29,6 +29,11 @@ function addTodo() {
         return;
     }
 
+    if(!priority){
+        alert("Priority cannot be empty")
+        return;
+    }
+
     if (endTime === '') {
         alert("ToDo end time cannot be empty");
         return;
@@ -196,8 +201,6 @@ function completeTodoItem(todoItem) {
     todoItem.querySelector('.edit-btn').disabled = true;
     todoItem.querySelector('.task-completed-btn').disabled = true;
     todoItem.querySelector('.delete-btn').disabled = true;
-    // todoItem.querySelector('.delete-btn').classList.remove('btn-danger');
-    // todoItem.querySelector('.delete-btn').classList.add('btn-secondary');
 
     updateLocalStorage();
 }
