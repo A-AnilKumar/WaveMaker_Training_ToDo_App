@@ -33,14 +33,18 @@ function addTodo() {
         alert("ToDo end time cannot be empty");
         return;
     }
-
+    
     if (endDate === '') {
         alert("ToDo end date cannot be empty");
         return;
     }
 
-    if (endTime < new Date().toTimeString().split(' ')[0].substring(0, 5)) {
-        alert("Time should be future not past ")
+    const now = new Date();
+    const currentDate = now.toISOString().split('T')[0];
+    const currentTime = now.toTimeString().split(' ')[0].substring(0, 5);
+
+    if (endDate < currentDate || (endDate === currentDate && endTime < currentTime)) {
+        alert("Date and time should be in the future, not in the past.");
         return;
     }
 
@@ -135,22 +139,22 @@ function showEditDialog(todoItem) {
         // Get the selected date and time
         const selectedDate = editEndDate.value;
         const selectedTime = editEndTime.value;
-    
+
         // Get the current date and time for comparison
         const now = new Date();
         const currentDate = now.toISOString().split('T')[0];
         const currentTime = now.toTimeString().split(' ')[0].substring(0, 5);
-    
+
         if (!selectedDate) {
             alert("Date cannot be empty");
             return;
         }
-    
+
         if (selectedDate < currentDate || (selectedDate === currentDate && selectedTime < currentTime)) {
             alert('You cannot select a past date or time. Please choose a valid future date and time.');
-            return; 
+            return;
         }
-    
+
         saveTodoEdit(todoItem);
         overlay.remove();
         dialog.remove();
@@ -191,7 +195,7 @@ function completeTodoItem(todoItem) {
     // to disable the buttons 
     todoItem.querySelector('.edit-btn').disabled = true;
     todoItem.querySelector('.task-completed-btn').disabled = true;
-    todoItem.querySelector('.delete-btn').disabled =true;
+    todoItem.querySelector('.delete-btn').disabled = true;
     // todoItem.querySelector('.delete-btn').classList.remove('btn-danger');
     // todoItem.querySelector('.delete-btn').classList.add('btn-secondary');
 
